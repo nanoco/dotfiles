@@ -1,0 +1,376 @@
+" Initialization {{{
+augroup MyAutoCmd
+    autocmd!
+augroup END
+
+set nocompatible
+
+let mapleader = ','
+let g:mapleader = ','
+let g:maplocalleader = ','
+
+filetype plugin on "ファイルタイプの検索を有効にする
+filetype indent on "そのファイルタイプにあわせたインデントを利用する
+
+function! s:SID_PREFIX()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_')
+endfunction
+" }}}
+
+" setting  {{{
+" edit {{{
+set smarttab
+set expandtab
+set ts=2
+set sw=2
+set modeline
+set backspace=indent,eol,start
+set showmatch
+set cpoptions-=m
+set matchtime=3
+set matchpairs+=<:>
+set directory=$HOME/.vim/tmp
+
+set hidden
+set infercase
+set cdpath+=~
+set foldcolumn=3
+set grepprg=internal
+set swapfile
+set textwidth=0
+set timeout timeoutlen=2500 ttimeoutlen=50 " Keymapping timeout.
+set updatetime=3000 " CursorHold time.
+"}}}
+" search {{{
+set ignorecase
+set smartcase
+set incsearch
+set wrapscan
+set hlsearch
+"}}}
+" view {{{2
+
+set number
+if exists('&ambiwidth')
+  set ambiwidth=double
+endif
+set list
+set listchars=tab:>.,trail:_,extends:>,precedes:<
+set title
+set titlelen=90
+set linebreak
+set showbreak=>\
+set breakat=\ \	;:,!?
+set writebackup
+set nobackup
+set backupcopy=yes
+set wildmenu
+set wildmode=list:longest,full
+set history=300
+set spelllang=en_us
+set display=lastline
+set formatoptions+=mM
+set lazyredraw
+set noequalalways
+" status line {{{
+set laststatus=2
+set showcmd
+set nocursorline
+
+function! s:set_statusline()
+  "1:green 2:gray 3:orange 4:blue 5:white 6:cyan 7:yellow
+  set statusline=
+  set statusline+=%<
+  set statusline+=%5*[%n]%* " buffer number
+  set statusline+=\ %4*%m%* " state [+]
+  set statusline+=\ %4*%{expand('%:p:t')}%* " filename
+  set statusline+=\ %4*%<\(%{SnipMid(expand('%:p:h'),80-len(expand('%:p:t')),'...')}\)%*
+  set statusline+=%= " delimiter
+  set statusline+=%3*%r%* " readonly flag
+  set statusline+=%h " help buffer
+  set statusline+=%w " preview window
+  set statusline+=%1*%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%y%* " encode, fileformat filetype
+  set statusline+=%7*\[%l,\ %c]%* " line row
+endfunction
+command! SetStatusLine call s:set_statusline()
+call s:set_statusline()
+" }}}
+set guicursor=a:blinkon0
+set ruler
+set sm
+autocmd MyAutoCmd FileType * setl formatoptions-=ro | setl formatoptions+=mM
+"}}}
+" syntax {{{2
+syntax enable
+set fileformat=unix
+set fileformats=unix,dos,mac
+set ambiwidth=double
+set autoindent
+set smartindent
+set autoread
+set browsedir=current
+set viminfo='50,<1000,s100,\"50
+set viminfo+=!
+set viminfo+=n~/.vim/tmp/viminfo
+set suffixes=.bak,~,.swp,.o,.info,.brf,.bak,.back
+"}}}
+" color {{{
+augroup highlightIdegraphicSpace
+  autocmd!
+  autocmd Colorscheme * highlight IdeographicSpace term=underline ctermbg=DarkGreen guibg=DarkGreen
+  autocmd VimEnter,WinEnter * match IdeographicSpace /　/
+augroup END
+colorscheme rdark
+set t_Co=256
+hi Cursor ctermbg=black
+hi Pmenu cterm=standout ctermfg=lightgray ctermbg=black
+hi PmenuSel cterm=bold ctermfg=2 ctermbg=black
+hi PmenuSbar ctermbg=0
+hi VertSplit cterm=NONE
+hi LineNr ctermfg=2
+hi ColorColumn ctermbg=grey
+"}}}
+" command {{{
+command! -bang -bar -complete=file -nargs=? Utf8 edit<bang> ++enc=utf-8 <args>
+command! -bang -bar -complete=file -nargs=? Iso2022jp edit<bang> ++enc=iso-2022-jp <args>
+command! -bang -bar -complete=file -nargs=? Cp932 edit<bang> ++enc=cp932 <args>
+command! -bang -bar -complete=file -nargs=? Euc edit<bang> ++enc=euc-jp <args>
+command! -bang -bar -complete=file -nargs=? Utf16 edit<bang> ++enc=ucs-2le <args>
+command! -bang -bar -complete=file -nargs=? Utf16be edit<bang> ++enc=ucs-2 <args>
+command! -bang -bar -complete=file -nargs=? Jis  Iso2022jp<bang> <args>
+command! -bang -bar -complete=file -nargs=? Sjis  Cp932<bang> <args>
+command! -bang -bar -complete=file -nargs=? Unicode Utf16<bang> <args>
+command! -bang -bar -complete=file -nargs=? Unix edit<bang> ++fileformat=unix <args>
+command! -bang -bar -complete=file -nargs=? Mac edit<bang> ++fileformat=mac <args>
+command! -bang -bar -complete=file -nargs=? Dos edit<bang> ++fileformat=dos <args>
+command! Nkf !nkf -g %
+" autocmd MyAutoCmd BufWritePre * :%s/\s\+$//ge " space at end of line is deleted automatically
+" autocmd BufWritePre * :%s/\t/ /ge " tab is replaced with space automatically
+"}}}
+"}}}
+
+" map {{{
+nnoremap ; <Nop>
+xnoremap ; <Nop>
+nnoremap m <Nop>
+xnoremap m <Nop>
+nnoremap , <Nop>
+xnoremap , <Nop>
+nnoremap t <Nop>
+xnoremap t <Nop>
+nnoremap f <Nop>
+xnoremap f <Nop>
+noremap : ;
+noremap ; :
+
+noremap! <7f> <08> " backspace
+nnoremap x "_x
+vnoremap x "_x
+" input {{{
+inoremap <C-t> <C-v><TAB>
+xnoremap <TAB>  >gv
+xnoremap <S-TAB>  <gv
+nnoremap P P=']
+" }}}
+" move {{{
+vnoremap j gj
+vnoremap k gk
+nnoremap <C-a> <Home>
+nnoremap <C-e> <End>
+noremap j gj
+noremap k gk
+nmap n nzz
+nmap N Nzz
+nmap * *zz
+nmap # #zz
+nmap g* g*zz
+nmap g# g#zz
+" }}}
+" search {{{
+nnoremap <Esc><Esc> :<C-u>set nohlsearch<Return>
+nnoremap / :<C-u>set hlsearch<Return>/
+nnoremap ? :<C-u>set hlsearch<Return>?
+nnoremap * :<C-u>set hlsearch<Return>*
+nnoremap # :<C-u>set hlsearch<Return>#
+cnoremap <expr> /  getcmdtype() == '/' ? '\/' : '/'
+cnoremap <expr> ?  getcmdtype() == '?' ? '\?' : '?'
+vnoremap * "zy:let @/ = @z<CR>n
+vnoremap v $h
+" }}}
+" ; scoron {{{
+nnoremap [scoron] <Nop>
+nmap ; [scoron]
+nnoremap <silent> [scoron]w :w<CR>
+nnoremap <silent> [scoron]d :bd<CR>
+nnoremap <silent> [scoron]q :q<CR>
+nnoremap <silent> [scoron]W :w!<CR>
+nnoremap <silent> [scoron]D :bd!<CR>
+nnoremap <silent> [scoron]Q :q!<CR>
+nnoremap [scoron]; :<C-u>
+" }}}
+" space space {{{
+nnoremap [Space] <Nop>
+nmap <Space> [Space]
+nnoremap <silent> [Space]/  :<C-u>call ToggleOption('hlsearch')<CR>
+nnoremap <silent> [Space]c  :<C-u>call ToggleOption('cursorline')<CR>
+" }}}
+" t tab {{{
+nnoremap [tab] <Nop>
+nmap t [tab]
+nnoremap <silent> [tab]c :tabnew \| tabmove<CR>
+nnoremap <silent> [tab]n :tabnext<CR>
+nnoremap <silent> [tab]p :tabprevious<CR>
+nnoremap <silent> [tab]l :tabs<CR>
+
+for i in range(10)
+  execute 'nnoremap <silent>' ('[tab]'.(i)) ((i+1).'gt')
+endfor
+unlet i
+
+nnoremap <silent> [tab]f :<C-u>tabnew<CR>:tabmove<CR>:Unite file<CR>
+nnoremap <silent> [tab]b :<C-u>tabnew<CR>:tabmove<CR>:Unite buffer<CR>
+nnoremap <silent> [tab]m :<C-u>tabnew<CR>:tabmove<CR>:Unite file_mru<CR>
+nnoremap <C-n> :tabnext<CR>
+nnoremap <C-p> :tabprevious<CR>
+" }}}
+" w window {{{
+nnoremap <Up> <C-W>k
+nnoremap <Down> <C-W>j
+nnoremap <Left> <C-W>h
+nnoremap <Right> <C-W>l
+map <kPlus> <C-W>+
+map <kMinus> <C-W>-
+" }}}
+" }}}
+
+" my functions {{{
+" Toggle options. "{{{
+function! ToggleOption(option_name)
+    execute 'setlocal' a:option_name.'!'
+    execute 'setlocal' a:option_name.'?'
+endfunction
+" SnipMid {{{2
+function! SnipMid(str, len, mask)
+  if a:len >= len(a:str)
+    return a:str
+  elseif a:len <= len(a:mask)
+    return a:mask
+  endif
+
+  let len_head = (a:len - len(a:mask)) / 2
+  let len_tail = a:len - len(a:mask) - len_head
+
+  return (len_head > 0 ? a:str[: len_head - 1] : '') . a:mask . (len_tail > 0 ? a:str[-len_tail :] : '')
+endfunction
+" }}}
+" command-line window {{{
+nnoremap <sid>(command-line-enter) q:
+xnoremap <sid>(command-line-enter) q:
+nnoremap <sid>(command-line-norange) q:<C-u>
+
+nmap :  <sid>(command-line-enter)
+xmap :  <sid>(command-line-enter)
+
+autocmd MyAutoCmd CmdwinEnter * call s:init_cmdwin()
+function! s:init_cmdwin()
+  nnoremap <buffer> q :<C-u>quit<CR>
+  nnoremap <buffer> <TAB> :<C-u>quit<CR>
+  inoremap <buffer><expr><CR> pumvisible() ? "\<C-y>\<CR>" : "\<CR>"
+  inoremap <buffer><expr><C-h> pumvisible() ? "\<C-y>\<C-h>" : "\<C-h>"
+  inoremap <buffer><expr><BS> pumvisible() ? "\<C-y>\<C-h>" : "\<C-h>"
+
+  " Completion.
+  inoremap <buffer><expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+  startinsert!
+endfunction
+" }}}
+" tabline {{{
+function! s:my_tabline()
+  let l:s = ''
+
+  for l:i in range(1, tabpagenr('$'))
+    let l:bufnrs = tabpagebuflist(i)
+    let l:curbufnr = l:bufnrs[tabpagewinnr(l:i) - 1]  " first window, first appears
+
+    let l:no = (l:i <= 10 ? l:i-1 : '#')  " display 0-origin tabpagenr.
+    let mod = len(filter(copy(bufnrs), 'getbufvar(v:val, "&modified")')) ? '[+]' : ''
+    let l:title = gettabwinvar(l:i, tabpagewinnr(l:i), 'title')
+    if l:title == ''
+      let l:title = fnamemodify(gettabwinvar(l:i, tabpagewinnr(l:i), 'cwd'), ':t')
+      if l:title == ''
+        let l:title = fnamemodify(bufname(l:curbufnr),':t')
+        if l:title == ''
+          let l:title = '[No Name]'
+        endif
+      endif
+    endif
+
+    let l:s .= '%'.l:i.'T'
+    let l:s .= '%#' . (l:i == tabpagenr() ? 'TabLineSel' : 'TabLine') . '#'
+    let l:s .= l:no . ':' . l:title . l:mod
+    let l:s .= '%#TabLineFill#  '
+  endfor
+
+  let l:info = fnamemodify(getcwd(), ":~") . ' '
+  let l:s .= '%#TabLineFill#%T%=%#TabLine#|'. l:info
+  return l:s
+endfunction
+let &tabline = '%!'. s:SID_PREFIX() . 'my_tabline()'
+set showtabline=2
+" }}}
+" visualmode insert {{{
+" via kana's vimrc
+function! s:separate_list(list, regexp)
+  let i = 0
+  while i < len(a:list) && a:list[i] =~# a:regexp
+    let i += 1
+  endwhile
+  return [(0 < i ? a:list[:i-1] : []), a:list[(i):]]
+endfunction
+
+function! s:cmd_Fmap(prefix, suffix, args)
+" FIXME: This parsing may not be compatible with the original one.
+  let [options, rest] = s:separate_list(a:args,
+  \ '^\c<\(buffer\|expr\|script\|silent\|special\|unique\)>$')
+  if len(rest) < 2
+    throw 'Insufficient number of arguments: ' . string(rest)
+  endif
+  let lhs = rest[0]
+  let rhs = rest[1:]
+
+  execute a:prefix.'noremap'.a:suffix join(options) lhs
+  \ ':<C-u>call' join(rhs) '<Return>'
+endfunction
+" Make I/A available in characterwise-visual and linewise-visual.
+function! s:force_blockwise_visual(next_key)
+  if visualmode() ==# 'V'
+    execute "normal! `<0\<C-v>`>$"
+  else
+    execute "normal! `<\<C-v>`>"
+  endif
+  call feedkeys(a:next_key, 'n')
+endfunction
+
+vnoremap <silent> I  :<C-u>call <SID>force_blockwise_visual('I')<Return>
+" }}}
+" pair close checker. {{{
+" from othree vimrc ( http://github.com/othree/rc/blob/master/osx/.vimrc )
+function! ClosePair(char)
+  if getline('.')[col('.') - 1] == a:char
+    return "\<Right>"
+  else
+    return a:char
+  endif
+endf
+nnoremap <expr> h
+  \ col('.') == 1 && foldlevel(line('.')) > 0 ? 'zc' : 'h'
+
+nnoremap <expr> l
+  \ foldclosed(line('.')) != -1 ? 'zo' : 'l'
+" }}}
+" }}}
+
+set secure
+" vim: expandtab softtabstop=2 shiftwidth=2
+" vim: foldmethod=marker
