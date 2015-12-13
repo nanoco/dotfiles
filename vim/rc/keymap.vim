@@ -98,8 +98,7 @@ xmap gp <Plug>(yankround-gp)
 nmap gP <Plug>(yankround-gP)
 
 " memolist
-command! -nargs=0 KobitoAdd execute 'silent !open -a Kobito.app ' . expand('%:p')
-command! -nargs=? -bar MyMemoNew :call memolist#new(<q-args>)|w|KobitoAdd
+command! -nargs=? -bar MyMemoNew :call memolist#new(<q-args>)
 nnoremap [Space]mn :<C-u>MyMemoNew<CR>
 nnoremap [Space]ml :<C-u>MemoList<CR>
 nnoremap [Space]mg :<C-u>MemoGrep<CR>
