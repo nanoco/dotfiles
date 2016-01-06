@@ -113,7 +113,7 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
-nnoremap <Tab> :<C-u>ChangeWindow<CR>
+nnoremap <Tab> <C-W><C-w>
 nnoremap <S-Tab> <C-w>W
 map <kPlus> <C-w>+
 map <kMinus> <C-w>-
@@ -129,8 +129,7 @@ xmap f [unite]
 nnoremap <silent> <expr> <SID>(buffer-file) ':<C-u>Unite file -buffer-name=files -input=' . expand('%:p:h') . '/<CR>'
 nmap <silent> [unite]f <SID>(buffer-file)
 nnoremap <silent> [unite]p :<C-u>Unite file_rec/async:!<CR>
-nnoremap <silent> [unite]o :<C-u>Unite -vertical -winwidth=30 outline<CR>
-nnoremap <silent> [unite]c :<C-u>Unite -no-start-insert colorscheme<CR>
+nnoremap <silent> [unite]o :<C-u>Unite -winwidth=30 line<CR>
 nnoremap <silent> [unite]g :<C-u>Unite grep<CR>
 nnoremap <silent> [unite]m :<C-u>Unite file_mru<CR>
 nnoremap <silent> [unite]y :<C-u>Unite -no-start-insert yankround<CR>
