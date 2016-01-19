@@ -33,6 +33,8 @@ set t_Co=256
 if !exists('g:colors_name')
   if !has('gui_running')
     syntax enable
+    colorscheme molokai
+    so ~/.vim/colors/custom.vim
   end
 endif
 
