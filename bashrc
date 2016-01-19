@@ -41,20 +41,24 @@ _set_up_prompt() {
   local _prompt_host="$_c_user\\u$_c_reset$_c_host@\\h$_c_reset"
   local _prompt_cwd="$_c_yellow\\w$_c_reset"
   local _prompt_main='\$ '
-  if [[ 2 -le $SHLVL ]]; then # is nested interactive shell?
-    local _prompt_shlvl=' ($SHLVL)'
-  else
-    local _prompt_shlvl=''
-  fi
   if [ -n "$WINDOW" ]; then # auto-title in GNU screen
     local _prompt_auto='\ek\e\\'
   else
     local _prompt_auto=''
   fi
+  parse_git() {
+    local repos=`git remote -v 2>/dev/null|head -n 1|awk '{print $2}'|cut -d "/" -f 2`
+    local branch=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
+    if [ -n "$repos" ]; then
+      echo "($repos@$branch) "
+    else
+      echo ''
+    fi
+  }
 
   PS1="$_prompt_auto$_prompt_title
 $_prompt_host $_prompt_cwd$_prompt_shlvl
-$_prompt_main"
+\$(parse_git)$_prompt_main"
 }
 
 _set_up_prompt
