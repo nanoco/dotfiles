@@ -136,6 +136,10 @@ nnoremap <silent> [unite]y :<C-u>Unite -no-start-insert yankround<CR>
 
 autocmd FileType unite call s:unite_my_settings()
 function! s:unite_my_settings()
+  " TABでactionを開くのを停止させる
+  nnoremap <buffer> <TAB> <Nop>
+  inoremap <buffer> <TAB> <Nop>
+
   nmap <buffer> <ESC> <Plug>(unite_all_exit)
   nmap <buffer> q <Plug>(unite_all_exit)
   nnoremap <silent><buffer><expr> dd unite#smart_map('dd', unite#do_action('delete'))
